@@ -1,50 +1,54 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../styles/addproduct.scss';  // Корректно
 
 const AddProduct = () => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+  const [image, setImage] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    const newProduct = { name, price };
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('price', price);
+    formData.append('image', image); // Загружаем изображение
 
-    axios.post('http://localhost:5000/products', newProduct)
-      .then(response => {
-        alert('Product added successfully');
-        setName('');
-        setPrice('');
-      })
-      .catch(error => {
-        console.log(error);
-        alert('Error adding product');
+    try {
+      const response = await axios.post('http://localhost:5000/cake', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Важно
+        },
       });
+
+      console.log('Product added:', response.data);
+    } catch (error) {
+      console.error('Error adding product:', error);
+    }
   };
 
   return (
-    <div className="add-product-container">
-      <h2>Add New Product</h2>
+    <div>
+      <h2>Add Product</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Price:</label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="Product Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <input
+          type="number"
+          placeholder="Product Price"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          required
+        />
+        <input
+          type="file"
+          onChange={(e) => setImage(e.target.files[0])}
+        />
         <button type="submit">Add Product</button>
       </form>
     </div>
