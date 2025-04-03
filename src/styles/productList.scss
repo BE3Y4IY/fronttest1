@@ -1,0 +1,22 @@
+.product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .product-item {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-item h3 {
+    margin: 0;
+  }
+  
+  .product-item p {
+    color: #333;
+  }
+  

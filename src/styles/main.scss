@@ -1,0 +1,23 @@
+.main-container {
+    padding: 20px;
+    background-color: #f4f4f4;
+  }
+  
+  .navbar {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+  }
+  
+  .navbar-link {
+    color: white;
+    text-decoration: none;
+    margin: 10px;
+  }
+  
+  .product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
