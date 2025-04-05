@@ -1,27 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Правильный импорт
+import { jwtDecode } from 'jwt-decode'; // Правильно
+
+import { useUser } from '../UserContext'; // Импортируем хук контекста
 
 import '../styles/navbar.scss';
 
 const Navbar = () => {
-  const [userName, setUserName] = useState(null);
+  const { userName, setUserName } = useUser();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token'); // Берем токен из localStorage
+  // Функция для обновления имени пользователя
+  const updateUserName = () => {
+    const token = localStorage.getItem('token');
     if (token) {
       try {
         const decodedToken = jwtDecode(token); // Декодируем токен
-        setUserName(decodedToken.userName); // Получаем имя пользователя из токена (если оно там есть)
+        setUserName(decodedToken.userName);
       } catch (error) {
-        console.error('Token is invalid or expired');
+        console.error('Invalid or expired token');
+        setUserName(null);
       }
+    } else {
+      setUserName(null);
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    updateUserName();
+
+    const handleStorageChange = () => {
+      updateUserName();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [setUserName]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Удаляем токен при выходе
-    setUserName(null); // Сброс имени пользователя
+    localStorage.removeItem('token');
+    setUserName(null); // Обновляем контекст после выхода
   };
 
   return (

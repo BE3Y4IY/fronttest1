@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // Правильно
+
+import { useUser } from '../UserContext'; // Импортируем хук контекста
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setUserName } = useUser(); // Получаем setUserName из контекста
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -14,8 +18,13 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:5000/login', { email, password });
       if (response.data.success) {
-        // Сохраняем токен в localStorage
-        localStorage.setItem('token', response.data.token);
+        const token = response.data.token;
+        localStorage.setItem('token', token);
+
+        // Декодируем токен и обновляем контекст
+        const decodedToken = jwtDecode(token);
+        setUserName(decodedToken.userName); // Обновляем состояние с именем пользователя
+
         navigate('/'); // Перенаправляем на главную страницу
       } else {
         setError('Ошибка при входе');
