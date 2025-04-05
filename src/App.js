@@ -5,11 +5,12 @@ import AddProduct from './components/AddProduct';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
 import Register from './components/Register';
-import { UserProvider } from './UserContext'; // Импортируем UserProvider
+import Korzina from './components/Korzina'; // Добавляем маршрут для корзины
+import { UserProvider } from './UserContext';
 
 const App = () => {
   return (
-    <UserProvider> {/* Оборачиваем приложение в UserProvider */}
+    <UserProvider>
       <Router>
         <Navbar />
         <Routes>
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/add-product" element={<AddProduct />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/korzina" element={<Korzina />} /> {/* Маршрут для корзины */}
         </Routes>
       </Router>
     </UserProvider>
