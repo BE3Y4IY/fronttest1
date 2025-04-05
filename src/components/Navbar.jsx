@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Правильно
-
+import { jwtDecode } from 'jwt-decode'; // Правильный импорт для jwt-decode
+import logo from '../assets/logo.png'; // Импортируем логотип
 import { useUser } from '../UserContext'; // Импортируем хук контекста
-
-import '../styles/navbar.scss';
+import '../styles/navbar.scss'; // Подключаем стили
 
 const Navbar = () => {
   const { userName, setUserName } = useUser();
@@ -46,7 +45,11 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <h1>Product Shop</h1>
+      <div className="navbar-left">
+        {/* Добавляем логотип */}
+        <img src={logo} alt="Logo" className="navbar-logo" />
+        <h1>Product Shop</h1>
+      </div>
       <div>
         {userName ? (
           <div>

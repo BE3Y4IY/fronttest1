@@ -6,7 +6,7 @@ import '../styles/addproduct.scss';
 
 const AddProduct = () => {
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [opis, setOpis] = useState('');  // Изменено с 'description' на 'opis'
   const [price, setPrice] = useState('');
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const AddProduct = () => {
 
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('description', description);
+    formData.append('opis', opis); // Изменено с 'description' на 'opis'
     formData.append('price', price);
     if (image) formData.append('image', image);
 
@@ -41,8 +41,8 @@ const AddProduct = () => {
         />
         <textarea
           placeholder="Описание"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={opis} // Изменено с 'description' на 'opis'
+          onChange={(e) => setOpis(e.target.value)} // Изменено с 'description' на 'opis'
           required
         />
         <input

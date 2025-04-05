@@ -1,10 +1,35 @@
 /* src/styles/navbar.scss */
+
 .navbar {
-  background-color: #333;
-  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #fedba6;
+  color: white;
 }
 
-.navbar .item {
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  width: 40px; /* Размер логотипа */
+  height: auto;
+  margin-right: 10px; /* Отступ между логотипом и названием */
+}
+
+.navbar h1 {
+  font-size: 24px;
+}
+
+.navbar-link {
   color: white;
-  font-size: 16px;
+  margin-left: 10px;
+  text-decoration: none;
+}
+
+.navbar-link:hover {
+  text-decoration: underline;
 }
