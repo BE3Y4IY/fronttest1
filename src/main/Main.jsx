@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductList from '../components/ProductList';
 import { Link } from 'react-router-dom';
-import '../styles/main.scss'; // Не забудь корректно подключить стили
+import '../styles/main.scss'; // Подключаем стили
 
 const Main = () => {
   const [products, setProducts] = useState([]);

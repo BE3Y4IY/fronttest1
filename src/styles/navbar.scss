@@ -1,6 +1,53 @@
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../styles/navbar.scss';
+
+const Navbar = () => {
+  const [userName, setUserName] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleDropdown = () => setShowDropdown(!showDropdown);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUserName(null);
+  };
+
+  return (
+    <nav className="navbar">
+      <h1>Product Shop</h1>
+      <div>
+        {userName ? (
+          <div>
+            <span>Welcome, {userName}!</span>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        ) : (
+          <div>
+            <Link to="/login" className="navbar-link">Login</Link>
+            <Link to="/register" className="navbar-link">Zarejestruj się</Link>
+          </div>
+        )}
+      </div>
+      <ul className="navbar-links">
+        <li><Link to="/">Главная</Link></li>
+        <li>
+          <button onClick={handleDropdown} className="dropdown-button">О нас</button>
+          {showDropdown && (
+            <ul className="dropdown-menu">
+              <li><Link to="/history">История</Link></li>
+              <li><Link to="/team">О персонале</Link></li>
+              <li><Link to="/production">Производство</Link></li>
+              <li><Link to="/achievements">Достижения</Link></li>
+            </ul>
+          )}
+        </li>
+        <li><Link to="/products">Продукция</Link></li>
+        <li><Link to="/news">Новости</Link></li>
+        <li><Link to="/contacts">Контакты</Link></li>
+      </ul>
+    </nav>
+  );
+};
+
+export default Navbar;
