@@ -15,7 +15,7 @@ const Modal = ({ product, closeModal }) => {
           )}
           <p><strong>Описание:</strong></p>
           <p>{product.opis}</p> {/* Отображаем описание из базы данных */}
-          <p><strong>Цена:</strong> {product.price} руб.</p>
+          <p><strong>Цена:</strong> {product.price} zl.</p>
         </div>
       </div>
     </div>

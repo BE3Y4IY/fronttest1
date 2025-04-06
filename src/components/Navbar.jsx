@@ -1,99 +1,86 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Используем Link для маршрутизации
+import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { FaShoppingCart } from 'react-icons/fa'; // Иконка корзины
-import { useUser } from '../UserContext'; // Импортируем хук контекста
-import axios from 'axios'; // Для получения данных о корзине
+import { FaShoppingCart } from 'react-icons/fa';
+import { useUser } from '../UserContext';
+import axios from 'axios';
 
 import '../styles/navbar.scss';
 
 const Navbar = () => {
-  const { userName, userId, setUserName, setUserId } = useUser(); // Должен работать, если контекст настроен верно
-  const [cartItemCount, setCartItemCount] = useState(0); // Для отображения количества товаров в корзине
+  const { userName, userId, setUserName, setUserId } = useUser();
+  const [cartItemCount, setCartItemCount] = useState(0);
 
-  // Функция для обновления имени пользователя и id
   const updateUserName = () => {
     const token = localStorage.getItem('token');
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
         setUserName(decodedToken.userName);
-        setUserId(decodedToken.userId);  // Обновляем userId
+        setUserId(decodedToken.userId);
       } catch (error) {
         console.error('Invalid or expired token');
         setUserName(null);
-        setUserId(null);  // Если токен неправильный, сбрасываем userId
+        setUserId(null);
       }
     } else {
       setUserName(null);
-      setUserId(null);  // Если токен отсутствует, сбрасываем userId
+      setUserId(null);
     }
   };
 
-  // Получение количества товаров в корзине для текущего пользователя
   const fetchCartItemCount = async () => {
     if (userId) {
       try {
         const response = await axios.get(`http://localhost:5000/cart/${userId}`);
         const totalItemCount = response.data.reduce((total, item) => total + item.quantity, 0);
-        setCartItemCount(totalItemCount); // Обновляем количество товаров в корзине
+        setCartItemCount(totalItemCount);
       } catch (error) {
         console.error('Ошибка при получении корзины:', error);
-        setCartItemCount(0); // В случае ошибки, корзина пуста
+        setCartItemCount(0);
       }
     }
   };
 
   useEffect(() => {
     updateUserName();
-    const handleStorageChange = () => {
-      updateUserName();
-    };
+    const handleStorageChange = () => updateUserName();
 
     window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [setUserName, setUserId]);
 
-  // Запрашиваем количество товаров в корзине после авторизации или обновления userId
+  useEffect(() => {
+    if (userId) fetchCartItemCount();
+  }, [userId]);
+
   useEffect(() => {
     if (userId) {
-      fetchCartItemCount();
-    }
-  }, [userId]); // Этот эффект будет срабатывать при изменении userId
-
-  // Функция для выхода из системы
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setUserName(null);
-    setUserId(null);  // При выходе из системы очищаем и userId
-  };
-
-  // Для обновления количества товаров в корзине после добавления/удаления
-  useEffect(() => {
-    if (userId) {
-      const intervalId = setInterval(fetchCartItemCount, 5000); // Обновляем каждые 5 секунд (если нужно чаще — уменьшите время)
-      return () => clearInterval(intervalId); // Очистка интервала при размонтировании
+      const intervalId = setInterval(fetchCartItemCount, 5000);
+      return () => clearInterval(intervalId);
     }
   }, [userId]);
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUserName(null);
+    setUserId(null);
+  };
+
   return (
     <nav className="navbar">
-      {/* Оборачиваем название сайта в Link для перехода на главную */}
       <Link to="/" className="navbar-logo">
         <h1>Product Shop</h1>
       </Link>
+
       <div className="navbar-links">
         {userName ? (
           <div>
-            <span>Welcome, {userName}!</span>
+            <Link to="/user" className="navbar-link">
+              Welcome, {userName}
+            </Link>
+            <Link to="/add-product" className="navbar-link">Add Product</Link>
             <button onClick={handleLogout}>Logout</button>
-            {/* Ссылка на страницу пользователя */}
-            <Link to="/user" className="navbar-link">User Page</Link> {/* Ссылка на страницу профиля пользователя */}
-            {/* Добавляем ссылку на страницу добавления товара */}
-            <Link to="/add-product" className="navbar-link">Add Product</Link> {/* Ссылка на страницу добавления товара */}
           </div>
         ) : (
           <div>
@@ -101,8 +88,10 @@ const Navbar = () => {
             <Link to="/register" className="navbar-link">Register</Link>
           </div>
         )}
-        <Link to="/korzina" className="navbar-link">
-          <FaShoppingCart size={24} /> ({cartItemCount}) {/* Показываем количество товаров */}
+
+        <Link to="/korzina" className="navbar-link cart-icon">
+          <FaShoppingCart size={20} />
+          <span>({cartItemCount})</span>
         </Link>
       </div>
     </nav>

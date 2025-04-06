@@ -69,7 +69,7 @@ const ProductList = ({ products }) => {
               <p>No image available</p>
             )}
             <h3>{product.name}</h3>
-            <p>{product.price} руб.</p>
+            <p>{product.price} zl.</p>
 
             <div className="product-actions">
               <button

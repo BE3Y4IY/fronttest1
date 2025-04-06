@@ -77,7 +77,7 @@ const Korzina = () => {
               />
               <div className="cart-info">
                 <h3>{item.name}</h3>
-                <p>{item.price} ₽</p>
+                <p>{item.price} zl</p>
                 <div className="quantity-controls">
                   <button onClick={() => updateQuantity(item.product_id, -1)}>-</button>
                   <span>{item.quantity}</span>
@@ -92,7 +92,7 @@ const Korzina = () => {
 
       {!loading && cartItems.length > 0 && (
         <div className="cart-summary">
-          <h3>Общая сумма: {totalPrice} ₽</h3>
+          <h3>Общая сумма: {totalPrice} zl</h3>
           <h4>Общее количество товаров: {totalItems}</h4> {/* Отображаем количество товаров */}
           <button className="checkout-btn">Оформить заказ</button>
         </div>
