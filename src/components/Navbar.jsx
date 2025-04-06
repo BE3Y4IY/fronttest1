@@ -71,6 +71,14 @@ const Navbar = () => {
     setUserId(null);  // При выходе из системы очищаем и userId
   };
 
+  // Для обновления количества товаров в корзине после добавления/удаления
+  useEffect(() => {
+    if (userId) {
+      const intervalId = setInterval(fetchCartItemCount, 5000); // Обновляем каждые 5 секунд (если нужно чаще — уменьшите время)
+      return () => clearInterval(intervalId); // Очистка интервала при размонтировании
+    }
+  }, [userId]);
+
   return (
     <nav className="navbar">
       {/* Оборачиваем название сайта в Link для перехода на главную */}
@@ -82,13 +90,15 @@ const Navbar = () => {
           <div>
             <span>Welcome, {userName}!</span>
             <button onClick={handleLogout}>Logout</button>
+            {/* Ссылка на страницу пользователя */}
+            <Link to="/user" className="navbar-link">User Page</Link> {/* Ссылка на страницу профиля пользователя */}
             {/* Добавляем ссылку на страницу добавления товара */}
             <Link to="/add-product" className="navbar-link">Add Product</Link> {/* Ссылка на страницу добавления товара */}
           </div>
         ) : (
           <div>
             <Link to="/login" className="navbar-link">Login</Link>
-            <Link to="/register" className="navbar-link">Zarejestruj się</Link>
+            <Link to="/register" className="navbar-link">Register</Link>
           </div>
         )}
         <Link to="/korzina" className="navbar-link">
