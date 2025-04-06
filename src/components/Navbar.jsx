@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Используем Link для маршрутизации
 import { jwtDecode } from 'jwt-decode';
 import { FaShoppingCart } from 'react-icons/fa'; // Иконка корзины
 import { useUser } from '../UserContext'; // Импортируем хук контекста
@@ -82,6 +82,8 @@ const Navbar = () => {
           <div>
             <span>Welcome, {userName}!</span>
             <button onClick={handleLogout}>Logout</button>
+            {/* Добавляем ссылку на страницу добавления товара */}
+            <Link to="/add-product" className="navbar-link">Add Product</Link> {/* Ссылка на страницу добавления товара */}
           </div>
         ) : (
           <div>
