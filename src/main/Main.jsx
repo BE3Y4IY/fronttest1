@@ -1,20 +1,20 @@
+// src/main/Main.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductList from '../components/ProductList';
-import { Link } from 'react-router-dom';
-import { useUser } from '../UserContext'; // Импортируем хук для работы с пользователем
-import '../styles/main.scss'; // Подключаем стили
+import { useUser } from '../UserContext';
+import '../styles/main.scss';
+import Onas from '../components/Onas'; // 🔥 Добавили Onas
 
 const Main = () => {
-  const { userName, userId } = useUser(); // Получаем имя пользователя из контекста
+  const { userName, userId } = useUser();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [cart, setCart] = useState([]); // Массив для товаров в корзине
+  const [cart, setCart] = useState([]);
 
-  // Загружаем продукты с бэкенда
   useEffect(() => {
-    axios.get('http://localhost:5000/cake')  // Убедитесь, что ваш сервер работает на этом адресе
+    axios.get('http://localhost:5000/cake')
       .then(response => {
         setProducts(response.data);
         setLoading(false);
@@ -25,18 +25,16 @@ const Main = () => {
       });
   }, []);
 
-  // Загружаем корзину после добавления товара
   useEffect(() => {
     if (userId) {
       axios.get(`http://localhost:5000/cart/${userId}`)
         .then(response => {
-          setCart(response.data); // Обновляем корзину с сервера
+          setCart(response.data);
         })
         .catch(error => console.log(error));
     }
   }, [userId]);
 
-  // Обработчик для добавления товара в корзину
   const addToCart = async (product) => {
     if (!userId) {
       alert('Пожалуйста, войдите в систему, чтобы добавить товар в корзину');
@@ -44,15 +42,15 @@ const Main = () => {
     }
 
     try {
-      const token = localStorage.getItem('token'); // Получаем токен пользователя
+      const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/cart', 
+        'http://localhost:5000/cart',
         { productId: product.id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data.success) {
-        setCart([...cart, response.data.product]); // Обновляем корзину локально
+        setCart([...cart, response.data.product]);
         alert('Товар добавлен в корзину');
       }
     } catch (error) {
@@ -62,21 +60,20 @@ const Main = () => {
 
   return (
     <div className="main">
-      <h1>Привет, {userName ? userName : 'гость'}!</h1> {/* Приветствие с именем пользователя */}
-      
+      <h1>Привет, {userName ? userName : 'гость'}!</h1>
+
       {loading && <p>Загрузка...</p>}
       {error && <p>{error}</p>}
 
       <div className="product-grid">
-        <ProductList 
-          products={products} 
-          addToCart={addToCart} // Передаем обработчик добавления в корзину
+        <ProductList
+          products={products}
+          addToCart={addToCart}
         />
       </div>
 
-      {/* <Link to="/cart">
-        <button className="go-to-cart">Перейти в корзину</button>
-      </Link> */}
+      {/* 🔥 Добавляем Onas ниже списка товаров */}
+      <Onas />
     </div>
   );
 };
