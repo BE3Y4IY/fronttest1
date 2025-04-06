@@ -67,10 +67,12 @@ const Main = () => {
       {loading && <p>Загрузка...</p>}
       {error && <p>{error}</p>}
 
-      <ProductList 
-        products={products} 
-        addToCart={addToCart} // Передаем обработчик добавления в корзину
-      />
+      <div className="product-grid">
+        <ProductList 
+          products={products} 
+          addToCart={addToCart} // Передаем обработчик добавления в корзину
+        />
+      </div>
 
       <Link to="/cart">
         <button className="go-to-cart">Перейти в корзину</button>

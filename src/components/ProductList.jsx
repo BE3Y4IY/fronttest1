@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import { useUser } from '../UserContext'; // Импортируем хук контекста
 import axios from 'axios';
+import { FaShoppingCart } from 'react-icons/fa'; // Иконка для корзины
 import '../styles/productList.scss';
 
 const ProductList = ({ products }) => {
@@ -57,7 +58,11 @@ const ProductList = ({ products }) => {
         <p>Нет продуктов для отображения</p>
       ) : (
         products.map(product => (
-          <div key={product.id} className="product-card">
+          <div
+            key={product.id}
+            className="product-card"
+            onClick={() => openModal(product)} // Открытие модального окна при клике на карточку
+          >
             {product.image_url ? (
               <img src={`http://localhost:5000${product.image_url}`} alt={product.name} />
             ) : (
@@ -66,8 +71,17 @@ const ProductList = ({ products }) => {
             <h3>{product.name}</h3>
             <p>{product.price} руб.</p>
 
-            <button onClick={() => openModal(product)}>Подробнее</button>
-            <button onClick={() => addToCart(product.id)}>Добавить в корзину</button>
+            <div className="product-actions">
+              <button
+                className="add-to-cart-btn"
+                onClick={(e) => {
+                  e.stopPropagation(); // Предотвращаем открытие модала при клике на кнопку
+                  addToCart(product.id);
+                }}
+              >
+                <FaShoppingCart size={20} /> {/* Иконка корзины */}
+              </button>
+            </div>
           </div>
         ))
       )}

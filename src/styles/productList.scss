@@ -22,7 +22,8 @@
 
 .product-card img {
   width: 100%;
-  height: auto;
+  height: 200px;  // Задаем фиксированную высоту для всех изображений
+  object-fit: cover; // Обрезаем изображение, чтобы оно заполнило блок
   border-radius: 8px;
 }
 

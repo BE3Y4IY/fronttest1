@@ -62,7 +62,10 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <h1>Product Shop</h1>
+      {/* Оборачиваем название сайта в Link для перехода на главную */}
+      <Link to="/" className="navbar-logo">
+        <h1>Product Shop</h1>
+      </Link>
       <div className="navbar-links">
         {userName ? (
           <div>
