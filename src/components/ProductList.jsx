@@ -40,10 +40,10 @@ const ProductList = ({ products }) => {
         { headers: { Authorization: `Bearer ${token}` } } // Передаем токен в заголовках
       );
       
-      if (response.data.success) {
-        setCartMessage('Товар добавлен в корзину!');
-        setTimeout(() => setCartMessage(''), 3000); // Убираем сообщение через 3 секунды
-      }
+      // if (response.data.success) {
+      //   setCartMessage('Товар добавлен в корзину!');
+      //   setTimeout(() => setCartMessage(''), 3000); // Убираем сообщение через 3 секунды
+      // }
     } catch (error) {
       console.error('Ошибка при добавлении товара в корзину', error);
       setCartMessage('Ошибка при добавлении товара в корзину');

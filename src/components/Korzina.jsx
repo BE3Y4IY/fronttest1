@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../UserContext';
 import axios from 'axios';
-import '../styles//korzina.scss'; // Стили отдельно для красоты
+import '../styles/korzina.scss'; // Стили отдельно для красоты
 
 const Korzina = () => {
   const { userId } = useUser();
@@ -55,6 +55,9 @@ const Korzina = () => {
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
+  // Считаем общее количество товаров
+  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+
   return (
     <div className="korzina-container">
       <h2>🛒 Ваша корзина</h2>
@@ -90,6 +93,7 @@ const Korzina = () => {
       {!loading && cartItems.length > 0 && (
         <div className="cart-summary">
           <h3>Общая сумма: {totalPrice} ₽</h3>
+          <h4>Общее количество товаров: {totalItems}</h4> {/* Отображаем количество товаров */}
           <button className="checkout-btn">Оформить заказ</button>
         </div>
       )}

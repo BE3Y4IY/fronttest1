@@ -74,9 +74,9 @@ const Main = () => {
         />
       </div>
 
-      <Link to="/cart">
+      {/* <Link to="/cart">
         <button className="go-to-cart">Перейти в корзину</button>
-      </Link>
+      </Link> */}
     </div>
   );
 };

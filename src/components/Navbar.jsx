@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { FaShoppingCart } from 'react-icons/fa'; // Иконка корзины
 import { useUser } from '../UserContext'; // Импортируем хук контекста
+import axios from 'axios'; // Для получения данных о корзине
 
 import '../styles/navbar.scss';
 
@@ -29,9 +30,22 @@ const Navbar = () => {
     }
   };
 
+  // Получение количества товаров в корзине для текущего пользователя
+  const fetchCartItemCount = async () => {
+    if (userId) {
+      try {
+        const response = await axios.get(`http://localhost:5000/cart/${userId}`);
+        const totalItemCount = response.data.reduce((total, item) => total + item.quantity, 0);
+        setCartItemCount(totalItemCount); // Обновляем количество товаров в корзине
+      } catch (error) {
+        console.error('Ошибка при получении корзины:', error);
+        setCartItemCount(0); // В случае ошибки, корзина пуста
+      }
+    }
+  };
+
   useEffect(() => {
     updateUserName();
-
     const handleStorageChange = () => {
       updateUserName();
     };
@@ -43,15 +57,12 @@ const Navbar = () => {
     };
   }, [setUserName, setUserId]);
 
-  // Проверка корзины, если имя пользователя изменилось
+  // Запрашиваем количество товаров в корзине после авторизации или обновления userId
   useEffect(() => {
-    if (userName) {
-      const savedCart = JSON.parse(localStorage.getItem(`cart_${userName}`)) || [];
-      setCartItemCount(savedCart.length); // Обновляем количество товаров в корзине
-    } else {
-      setCartItemCount(0); // Если нет пользователя, корзина пуста
+    if (userId) {
+      fetchCartItemCount();
     }
-  }, [userName]); // Этот эффект будет срабатывать каждый раз, когда меняется userName
+  }, [userId]); // Этот эффект будет срабатывать при изменении userId
 
   // Функция для выхода из системы
   const handleLogout = () => {
@@ -79,7 +90,7 @@ const Navbar = () => {
           </div>
         )}
         <Link to="/korzina" className="navbar-link">
-          <FaShoppingCart size={24} /> ({cartItemCount})
+          <FaShoppingCart size={24} /> ({cartItemCount}) {/* Показываем количество товаров */}
         </Link>
       </div>
     </nav>
