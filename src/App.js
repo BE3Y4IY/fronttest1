@@ -8,6 +8,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Korzina from './components/Korzina';
 import UserPage from './components/UserPage';
+import Zamowienie from './components/Zamowienie'; // Импортируем новую страницу
 import { UserProvider } from './UserContext';
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/korzina" element={<Korzina />} />
           <Route path="/user" element={<UserPage />} />
+          <Route path="/Zamowienie" element={<Zamowienie />} /> {/* Новая страница */}
         </Routes>
       </Router>
     </UserProvider>

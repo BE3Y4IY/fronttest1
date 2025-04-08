@@ -14,7 +14,7 @@ const Register = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/register', { name, surname, email, password });
+      const response = await axios.post('http://localhost:5000/api/register', { name, surname, email, password });
       if (response.data.success) {
         navigate('/login'); // Перенаправляем на страницу логина после успешной регистрации
       } else {

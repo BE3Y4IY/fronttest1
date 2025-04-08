@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -8,25 +9,12 @@ import axios from 'axios';
 import '../styles/navbar.scss';
 
 const Navbar = () => {
-  const { userName, userId, setUserName, setUserId } = useUser();
+  const { userName, userId, setUserName, setUserId, updateUserFromToken } = useUser();
   const [cartItemCount, setCartItemCount] = useState(0);
 
+  // Обновляем данные пользователя из токена
   const updateUserName = () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        setUserName(decodedToken.userName);
-        setUserId(decodedToken.userId);
-      } catch (error) {
-        console.error('Invalid or expired token');
-        setUserName(null);
-        setUserId(null);
-      }
-    } else {
-      setUserName(null);
-      setUserId(null);
-    }
+    updateUserFromToken(); // Используем метод из контекста для обновления состояния
   };
 
   const fetchCartItemCount = async () => {
@@ -43,7 +31,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    updateUserName();
+    updateUserName(); // При монтировании компонента обновим данные пользователя
     const handleStorageChange = () => updateUserName();
 
     window.addEventListener('storage', handleStorageChange);

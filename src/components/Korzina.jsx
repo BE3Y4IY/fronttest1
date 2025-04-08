@@ -1,13 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../UserContext';
 import axios from 'axios';
-import '../styles/korzina.scss'; // Стили отдельно для красоты
+import { useNavigate } from 'react-router-dom';
+import '../styles/korzina.scss';
 
 const Korzina = () => {
-  const { userId } = useUser();
+  const { userId: contextUserId } = useUser();
+  const [userId, setUserId] = useState(contextUserId || localStorage.getItem('userId'));
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isUserIdLoaded, setIsUserIdLoaded] = useState(false);  // Состояние для проверки, что userId загрузился
+  const navigate = useNavigate();
+
+  // Когда userId изменяется, обновляем состояние
+  useEffect(() => {
+    console.log('userId из контекста:', contextUserId);
+    console.log('userId из localStorage:', localStorage.getItem('userId'));
+    console.log('Итоговый userId:', userId);
+
+    if (userId) {
+      setIsUserIdLoaded(true);
+    }
+  }, [userId, contextUserId]);
+
+  // Дожидаемся загрузки userId перед запросом на сервер
+  useEffect(() => {
+    if (isUserIdLoaded) {
+      fetchCartItems();
+    }
+  }, [isUserIdLoaded]);
 
   // Получение корзины
   const fetchCartItems = async () => {
@@ -17,8 +39,11 @@ const Korzina = () => {
       return;
     }
 
+    console.log('Запрос на корзину для userId:', userId);
+
     try {
       const response = await axios.get(`http://localhost:5000/cart/${userId}`);
+      console.log('Ответ от сервера с товарами в корзине:', response.data);
       setCartItems(response.data);
       setLoading(false);
     } catch (err) {
@@ -28,10 +53,6 @@ const Korzina = () => {
     }
   };
 
-  useEffect(() => {
-    fetchCartItems();
-  }, [userId]);
-
   // Удаление товара
   const removeFromCart = async (productId) => {
     try {
@@ -39,6 +60,7 @@ const Korzina = () => {
       setCartItems(cartItems.filter(item => item.product_id !== productId));
     } catch (err) {
       console.error('Ошибка при удалении товара:', err);
+      setError('Не удалось удалить товар');
     }
   };
 
@@ -54,9 +76,11 @@ const Korzina = () => {
   };
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-
-  // Считаем общее количество товаров
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  const handleCheckout = () => {
+    navigate('/zamowienie');
+  };
 
   return (
     <div className="korzina-container">
@@ -93,8 +117,8 @@ const Korzina = () => {
       {!loading && cartItems.length > 0 && (
         <div className="cart-summary">
           <h3>Общая сумма: {totalPrice} zl</h3>
-          <h4>Общее количество товаров: {totalItems}</h4> {/* Отображаем количество товаров */}
-          <button className="checkout-btn">Оформить заказ</button>
+          <h4>Общее количество товаров: {totalItems}</h4>
+          <button className="checkout-btn" onClick={handleCheckout}>Оформить заказ</button>
         </div>
       )}
     </div>
